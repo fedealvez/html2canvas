@@ -245,7 +245,33 @@ export class CanvasRenderer {
             this.path(path);
             this.ctx.save();
             this.ctx.clip();
-            this.ctx.drawImage(
+
+            //to make element Respect the image objectFit
+            /* Custom Modif by Federico Daniel Alvez - init */
+            image.style.objectFit = 'contain';
+             var newWidth = 30;
+             var newHeight = 30;
+             var newX = box.left;
+             var newY = box.top;
+
+             if (image.width/box.width > image.height/box.height) {
+                 newWidth = box.width;
+                 newHeight = image.height * (box.width / image.width);
+                 newY = box.top + (box.height - newHeight) / 2;
+             } else {
+                 newWidth = image.width * (box.height / image.height);
+                 newHeight = box.height;
+                 newX = box.left + (box.width - newWidth) / 2;
+             }
+             //+10 hardcode offset correction from scale canvas ...
+             // - 7.99 same as above ...
+             this.ctx.drawImage(image, 0, 0, image.width + 10, image.height,
+               newX - 7.99, newY,
+               newWidth, newHeight);
+
+
+            /* Custom Modif by Federico Daniel Alvez - end */
+            /*this.ctx.drawImage(
                 image,
                 0,
                 0,
@@ -255,7 +281,7 @@ export class CanvasRenderer {
                 box.top,
                 box.width,
                 box.height
-            );
+            );*/
             this.ctx.restore();
         }
     }
